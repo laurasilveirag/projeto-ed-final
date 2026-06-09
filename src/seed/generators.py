@@ -89,15 +89,10 @@ def gen_musicas(
 
 
 def gen_usuarios(n: int = 3000) -> list[tuple]:
-    emails: set[str] = set()
     rows = []
-    while len(rows) < n:
-        email = fake.unique.email()
-        if email in emails:
-            continue
-        emails.add(email)
+    for _ in range(n):
         ts = _rand_ts()
-        rows.append((fake.name(), email, ts.date(), random.choice(PAISES), ts))
+        rows.append((fake.name(), fake.unique.email(), ts.date(), random.choice(PAISES), ts))
     return rows
 
 
@@ -189,6 +184,11 @@ def gen_playlist_musicas(
         ts = _rand_ts()
         ordem = random.randint(1, 100)
         rows.append((pl, ms, ordem, ts))
+    if len(rows) < n:
+        raise RuntimeError(
+            f"gen_playlist_musicas: only {len(rows)}/{n} unique pairs possible "
+            f"with {len(playlist_ids)} playlists × {len(musica_ids)} músicas"
+        )
     return rows
 
 
