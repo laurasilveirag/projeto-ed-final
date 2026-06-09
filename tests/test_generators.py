@@ -82,3 +82,35 @@ def test_gen_assinaturas_15pct_canceladas():
     rows = gen_assinaturas(usuario_ids, plano_ids, n=200)
     canceladas = sum(1 for r in rows if r[4] == "cancelada")
     assert 0.05 <= canceladas / len(rows) <= 0.30  # ~15% ±10%
+
+
+def test_volume_total_acima_de_100k():
+    artista_ids     = list(range(1, 501))
+    album_ids       = list(range(1, 2001))
+    genero_ids      = list(range(1, 31))
+    usuario_ids     = list(range(1, 3001))
+    plano_ids       = [1, 2, 3]
+    dispositivo_ids = list(range(1, 5001))
+    musica_ids      = list(range(1, 10001))
+    playlist_ids    = list(range(1, 2001))
+    assinatura_ids  = list(range(1, 3501))
+    duracoes        = {i: 200_000 for i in range(1, 10001)}
+    assin_valor     = {i: 19.90 for i in range(1, 3501)}
+
+    total = (
+        len(gen_generos())
+        + len(gen_planos())
+        + len(gen_artistas(500))
+        + len(gen_albuns(artista_ids, n=2000))
+        + len(gen_musicas(album_ids, artista_ids, genero_ids, n=10000))
+        + len(gen_usuarios(3000))
+        + len(gen_dispositivos(usuario_ids, n=5000))
+        + len(gen_assinaturas(usuario_ids, plano_ids, n=3500))
+        + len(gen_pagamentos(assinatura_ids, assin_valor, n=10500))
+        + len(gen_playlists(usuario_ids, n=2000))
+        + len(gen_playlist_musicas(playlist_ids, musica_ids, n=20000))
+        + len(gen_reproducoes(usuario_ids, musica_ids, dispositivo_ids, duracoes, n=70000))
+    )
+
+    assert total >= 100_000, f"Total de linhas insuficiente: {total}"
+    assert total >= 120_000, f"Volume esperado ≥120k, obtido: {total}"
