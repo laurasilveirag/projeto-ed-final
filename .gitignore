@@ -14,3 +14,11 @@ wheels/
 
 # Test cache
 .pytest_cache/
+
+# UV cache
+.uv/
+
+# IDE
+.vscode/
+.idea/
+*.DS_Store
