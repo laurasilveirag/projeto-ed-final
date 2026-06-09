@@ -10,4 +10,4 @@ RUN uv sync --frozen --no-dev
 COPY src/ ./src/
 COPY sql/ ./sql/
 
-CMD ["uv", "run", "python", "-m", "seed.main"]
+CMD ["uv", "run", "python", "-m", "src.seed.main"]
