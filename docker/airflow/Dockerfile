@@ -24,6 +24,10 @@ USER root
 
 RUN mkdir -p /opt/spark/jars && \
     wget -O /opt/spark/jars/postgresql-42.7.3.jar \
-    https://jdbc.postgresql.org/download/postgresql-42.7.3.jar
+        https://jdbc.postgresql.org/download/postgresql-42.7.3.jar && \
+    wget -O /opt/spark/jars/delta-spark_2.12-3.2.0.jar \
+        https://repo1.maven.org/maven2/io/delta/delta-spark_2.12/3.2.0/delta-spark_2.12-3.2.0.jar && \
+    wget -O /opt/spark/jars/delta-storage-3.2.0.jar \
+        https://repo1.maven.org/maven2/io/delta/delta-storage/3.2.0/delta-storage-3.2.0.jar
 
 USER airflow
