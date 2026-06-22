@@ -1,0 +1,45 @@
+site_name: Projeto Final — Pipeline Streaming
+site_description: Pipeline de dados com Arquitetura Medalhão para streaming de música
+site_url: https://laurasilveirag.github.io/projeto-ed-final/
+repo_url: https://github.com/laurasilveirag/projeto-ed-final
+repo_name: laurasilveirag/projeto-ed-final
+
+theme:
+  name: material
+  language: pt-BR
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+  features:
+    - navigation.tabs
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+
+nav:
+  - Home: index.md
+  - Arquitetura: arquitetura.md
+  - Como Rodar: como-rodar.md
+  - KPIs e Dashboard: kpis.md
+  - DICTIONARY: dictionary.md
+  - ADRs:
+    - ADR-0001 — Carga Incremental: adr/ADR-0001.md
+    - ADR-0002 — Gold Star Schema: adr/ADR-0002.md
+    - ADR-0003 — Serving Gold Postgres: adr/ADR-0003.md
+    - ADR-0004 — Spark PythonOperator: adr/ADR-0004.md
