@@ -14,10 +14,8 @@
 
 Abra `http://localhost:3000` no navegador.
 
-Credenciais padrão configuradas no projeto:
-- **E-mail:** jana@streaming.com
-- **Senha:** admin123
-
+No primeiro acesso, o Metabase pede para criar o usuário administrador.
+Use as credenciais definidas por você durante o onboarding (não há usuário/senha fixos versionados no repositório).
 ---
 
 ## 2. Conexão com o Postgres (schema gold)
@@ -31,8 +29,8 @@ Configuração em **Admin → Databases → streaming-gold**:
 | Servidor | `postgres` |
 | Porta | `5432` |
 | Banco de dados | `streaming` |
-| Usuário | `streaming` |
-| Senha | `streaming123` |
+| Usuário | `${POSTGRES_USER}` |
+| Senha | `${POSTGRES_PASSWORD}` |
 | Schemas | `gold` |
 | SSL | Desligado |
 

@@ -5,7 +5,10 @@
 -- Nota: dados sintéticos (Faker) tendem a gerar churn ~0 pois todos renovam
 
 SELECT
-    p_atual.ano_mes,
+    TO_CHAR(
+        TO_DATE(p_ant.ano_mes, 'YYYY-MM') + INTERVAL '1 month',
+        'YYYY-MM'
+    ) AS ano_mes,
     COUNT(DISTINCT p_ant.usuario_id)  AS ativos_mes_anterior,
     COUNT(DISTINCT CASE
         WHEN p_atual.usuario_id IS NULL
@@ -33,6 +36,5 @@ LEFT JOIN (
             TO_DATE(p_ant.ano_mes, 'YYYY-MM') + INTERVAL '1 month',
             'YYYY-MM'
         )
-GROUP BY p_atual.ano_mes
-HAVING p_atual.ano_mes IS NOT NULL
-ORDER BY p_atual.ano_mes DESC;
+GROUP BY 1
+ORDER BY 1 DESC;
