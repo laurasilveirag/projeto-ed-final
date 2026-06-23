@@ -110,6 +110,18 @@ Na segunda execução em diante, o Airflow processa apenas os registros inserido
 # O watermark_created_at fica salvo nas Airflow Variables
 ```
 
+## Tecnologias
+
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat&logo=postgresql&logoColor=white)
+![MinIO](https://img.shields.io/badge/MinIO-latest-C72E49?style=flat&logo=minio&logoColor=white)
+![Apache Spark](https://img.shields.io/badge/Apache%20Spark-3.5.1-E25A1C?style=flat&logo=apachespark&logoColor=white)
+![PySpark](https://img.shields.io/badge/PySpark-3.5.1-E25A1C?style=flat&logo=apachespark&logoColor=white)
+![Delta Lake](https://img.shields.io/badge/Delta%20Lake-3.2.0-00A3E0?style=flat&logo=delta&logoColor=white)
+![Apache Airflow](https://img.shields.io/badge/Apache%20Airflow-2.9.2-017CEE?style=flat&logo=apacheairflow&logoColor=white)
+![Metabase](https://img.shields.io/badge/Metabase-v0.50.15-509EE3?style=flat&logo=metabase&logoColor=white)
+![Docker Compose](https://img.shields.io/badge/Docker%20Compose-local-2496ED?style=flat&logo=docker&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python&logoColor=white)
+
 ## Documentação
 
 A documentação completa está disponível em:  
