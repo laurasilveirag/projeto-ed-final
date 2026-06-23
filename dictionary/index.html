@@ -1,0 +1,2108 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Pipeline de dados com Arquitetura Medalhão para streaming de música">
+      
+      
+      
+        <link rel="canonical" href="https://laurasilveirag.github.io/projeto-ed-final/dictionary/">
+      
+      
+        <link rel="prev" href="../kpis/">
+      
+      
+        <link rel="next" href="../adr/ADR-0001/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>DICTIONARY - Projeto Final — Pipeline Streaming</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dictionarymd-glossario-de-tabelas-e-colunas" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="Projeto Final — Pipeline Streaming" class="md-header__button md-logo" aria-label="Projeto Final — Pipeline Streaming" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Projeto Final — Pipeline Streaming
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              DICTIONARY
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/laurasilveirag/projeto-ed-final" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    laurasilveirag/projeto-ed-final
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../arquitetura/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Arquitetura
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../como-rodar/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Como Rodar
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../kpis/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  KPIs e Dashboard
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  DICTIONARY
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../adr/ADR-0001/" class="md-tabs__link">
+          
+  
+  
+  ADRs
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Projeto Final — Pipeline Streaming" class="md-nav__button md-logo" aria-label="Projeto Final — Pipeline Streaming" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Projeto Final — Pipeline Streaming
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/laurasilveirag/projeto-ed-final" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    laurasilveirag/projeto-ed-final
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arquitetura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../como-rodar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Como Rodar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kpis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KPIs e Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DICTIONARY
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DICTIONARY
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tabelas-de-origem-postgresql-schema-public" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tabelas de Origem (PostgreSQL — schema public)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tabelas de Origem (PostgreSQL — schema public)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        usuarios
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        planos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assinaturas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        assinaturas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pagamentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pagamentos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#artistas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        artistas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#albuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        albuns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#musicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        musicas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#playlists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        playlists
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#playlist_musicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        playlist_musicas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reproducoes-fato-principal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        reproducoes ⭐ (fato principal)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dispositivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dispositivos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tabelas-gold-postgresql-schema-gold-delta-lake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tabelas Gold (PostgreSQL — schema gold / Delta Lake)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tabelas Gold (PostgreSQL — schema gold / Delta Lake)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fato_reproducao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fato_reproducao
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fato_pagamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fato_pagamento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dim_tempo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dim_tempo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dim_usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dim_usuario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dim_plano" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dim_plano
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dim_artista" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dim_artista
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dim_musica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dim_musica
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regras-de-negocio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regras de Negócio
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADRs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADRs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/ADR-0001/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0001 — Carga Incremental
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/ADR-0002/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0002 — Gold Star Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/ADR-0003/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0003 — Serving Gold Postgres
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/ADR-0004/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0004 — Spark PythonOperator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tabelas-de-origem-postgresql-schema-public" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tabelas de Origem (PostgreSQL — schema public)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tabelas de Origem (PostgreSQL — schema public)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        usuarios
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        planos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assinaturas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        assinaturas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pagamentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pagamentos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#artistas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        artistas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#albuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        albuns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#musicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        musicas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#playlists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        playlists
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#playlist_musicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        playlist_musicas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reproducoes-fato-principal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        reproducoes ⭐ (fato principal)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dispositivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dispositivos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tabelas-gold-postgresql-schema-gold-delta-lake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tabelas Gold (PostgreSQL — schema gold / Delta Lake)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tabelas Gold (PostgreSQL — schema gold / Delta Lake)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fato_reproducao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fato_reproducao
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fato_pagamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fato_pagamento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dim_tempo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dim_tempo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dim_usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dim_usuario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dim_plano" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dim_plano
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dim_artista" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dim_artista
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dim_musica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dim_musica
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regras-de-negocio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regras de Negócio
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="dictionarymd-glossario-de-tabelas-e-colunas">DICTIONARY.md — Glossário de Tabelas e Colunas<a class="headerlink" href="#dictionarymd-glossario-de-tabelas-e-colunas" title="Permanent link">&para;</a></h1>
+<p>Glossário completo de todas as tabelas e colunas do projeto, da origem (Postgres) à Gold (star schema).</p>
+<hr />
+<h2 id="tabelas-de-origem-postgresql-schema-public">Tabelas de Origem (PostgreSQL — schema public)<a class="headerlink" href="#tabelas-de-origem-postgresql-schema-public" title="Permanent link">&para;</a></h2>
+<h3 id="usuarios">usuarios<a class="headerlink" href="#usuarios" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>SERIAL PK</td>
+<td>Identificador único do usuário</td>
+</tr>
+<tr>
+<td><code>nome</code></td>
+<td>VARCHAR(200)</td>
+<td>Nome completo</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>VARCHAR(300)</td>
+<td>E-mail único</td>
+</tr>
+<tr>
+<td><code>data_cadastro</code></td>
+<td>DATE</td>
+<td>Data de criação da conta</td>
+</tr>
+<tr>
+<td><code>pais</code></td>
+<td>VARCHAR(100)</td>
+<td>País de origem</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>TIMESTAMP</td>
+<td>Timestamp de inserção (watermark)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="planos">planos<a class="headerlink" href="#planos" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>SERIAL PK</td>
+<td>Identificador do plano</td>
+</tr>
+<tr>
+<td><code>nome</code></td>
+<td>VARCHAR(50)</td>
+<td>Nome: Grátis, Premium ou Família</td>
+</tr>
+<tr>
+<td><code>preco_mensal</code></td>
+<td>DECIMAL(8,2)</td>
+<td>Valor mensal em R$</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>TIMESTAMP</td>
+<td>Timestamp de inserção</td>
+</tr>
+</tbody>
+</table>
+<h3 id="assinaturas">assinaturas<a class="headerlink" href="#assinaturas" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>SERIAL PK</td>
+<td>Identificador da assinatura</td>
+</tr>
+<tr>
+<td><code>usuario_id</code></td>
+<td>INT FK</td>
+<td>Referência a <code>usuarios.id</code></td>
+</tr>
+<tr>
+<td><code>plano_id</code></td>
+<td>INT FK</td>
+<td>Referência a <code>planos.id</code></td>
+</tr>
+<tr>
+<td><code>data_inicio</code></td>
+<td>DATE</td>
+<td>Início da assinatura</td>
+</tr>
+<tr>
+<td><code>data_fim</code></td>
+<td>DATE (nullable)</td>
+<td>Fim da assinatura — <code>NULL</code> = ativa</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(20)</td>
+<td><code>ativa</code> ou <code>cancelada</code></td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>TIMESTAMP</td>
+<td>Timestamp de inserção</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pagamentos">pagamentos<a class="headerlink" href="#pagamentos" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>SERIAL PK</td>
+<td>Identificador do pagamento</td>
+</tr>
+<tr>
+<td><code>assinatura_id</code></td>
+<td>INT FK</td>
+<td>Referência a <code>assinaturas.id</code></td>
+</tr>
+<tr>
+<td><code>valor</code></td>
+<td>DECIMAL(8,2)</td>
+<td>Valor cobrado em R$</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>DATE</td>
+<td>Data do pagamento</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(20)</td>
+<td><code>pago</code> ou <code>falhou</code></td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>TIMESTAMP</td>
+<td>Timestamp de inserção</td>
+</tr>
+</tbody>
+</table>
+<h3 id="artistas">artistas<a class="headerlink" href="#artistas" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>SERIAL PK</td>
+<td>Identificador do artista</td>
+</tr>
+<tr>
+<td><code>nome</code></td>
+<td>VARCHAR(200)</td>
+<td>Nome artístico</td>
+</tr>
+<tr>
+<td><code>pais</code></td>
+<td>VARCHAR(100)</td>
+<td>País de origem</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>TIMESTAMP</td>
+<td>Timestamp de inserção</td>
+</tr>
+</tbody>
+</table>
+<h3 id="albuns">albuns<a class="headerlink" href="#albuns" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>SERIAL PK</td>
+<td>Identificador do álbum</td>
+</tr>
+<tr>
+<td><code>artista_id</code></td>
+<td>INT FK</td>
+<td>Referência a <code>artistas.id</code></td>
+</tr>
+<tr>
+<td><code>titulo</code></td>
+<td>VARCHAR(300)</td>
+<td>Título do álbum</td>
+</tr>
+<tr>
+<td><code>ano_lancamento</code></td>
+<td>SMALLINT</td>
+<td>Ano de lançamento</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>TIMESTAMP</td>
+<td>Timestamp de inserção</td>
+</tr>
+</tbody>
+</table>
+<h3 id="musicas">musicas<a class="headerlink" href="#musicas" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>SERIAL PK</td>
+<td>Identificador da música</td>
+</tr>
+<tr>
+<td><code>album_id</code></td>
+<td>INT FK</td>
+<td>Referência a <code>albuns.id</code></td>
+</tr>
+<tr>
+<td><code>artista_id</code></td>
+<td>INT FK</td>
+<td>Referência a <code>artistas.id</code></td>
+</tr>
+<tr>
+<td><code>genero_id</code></td>
+<td>INT FK</td>
+<td>Referência a <code>generos.id</code></td>
+</tr>
+<tr>
+<td><code>titulo</code></td>
+<td>VARCHAR(300)</td>
+<td>Título da música</td>
+</tr>
+<tr>
+<td><code>duracao_ms</code></td>
+<td>INT</td>
+<td>Duração em milissegundos</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>TIMESTAMP</td>
+<td>Timestamp de inserção</td>
+</tr>
+</tbody>
+</table>
+<h3 id="generos">generos<a class="headerlink" href="#generos" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>SERIAL PK</td>
+<td>Identificador do gênero</td>
+</tr>
+<tr>
+<td><code>nome</code></td>
+<td>VARCHAR(100)</td>
+<td>Nome: Pop, Rock, MPB, etc.</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>TIMESTAMP</td>
+<td>Timestamp de inserção</td>
+</tr>
+</tbody>
+</table>
+<h3 id="playlists">playlists<a class="headerlink" href="#playlists" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>SERIAL PK</td>
+<td>Identificador da playlist</td>
+</tr>
+<tr>
+<td><code>usuario_id</code></td>
+<td>INT FK</td>
+<td>Referência a <code>usuarios.id</code></td>
+</tr>
+<tr>
+<td><code>nome</code></td>
+<td>VARCHAR(300)</td>
+<td>Nome da playlist</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>TIMESTAMP</td>
+<td>Timestamp de inserção</td>
+</tr>
+</tbody>
+</table>
+<h3 id="playlist_musicas">playlist_musicas<a class="headerlink" href="#playlist_musicas" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>SERIAL PK</td>
+<td>Identificador</td>
+</tr>
+<tr>
+<td><code>playlist_id</code></td>
+<td>INT FK</td>
+<td>Referência a <code>playlists.id</code></td>
+</tr>
+<tr>
+<td><code>musica_id</code></td>
+<td>INT FK</td>
+<td>Referência a <code>musicas.id</code></td>
+</tr>
+<tr>
+<td><code>ordem</code></td>
+<td>SMALLINT</td>
+<td>Posição da música na playlist</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>TIMESTAMP</td>
+<td>Timestamp de inserção</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reproducoes-fato-principal">reproducoes ⭐ (fato principal)<a class="headerlink" href="#reproducoes-fato-principal" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>SERIAL PK</td>
+<td>Identificador do play</td>
+</tr>
+<tr>
+<td><code>usuario_id</code></td>
+<td>INT FK</td>
+<td>Referência a <code>usuarios.id</code></td>
+</tr>
+<tr>
+<td><code>musica_id</code></td>
+<td>INT FK</td>
+<td>Referência a <code>musicas.id</code></td>
+</tr>
+<tr>
+<td><code>dispositivo_id</code></td>
+<td>INT FK</td>
+<td>Referência a <code>dispositivos.id</code></td>
+</tr>
+<tr>
+<td><code>timestamp</code></td>
+<td>TIMESTAMP</td>
+<td>Momento do play</td>
+</tr>
+<tr>
+<td><code>ms_tocados</code></td>
+<td>INT</td>
+<td>Milissegundos efetivamente ouvidos</td>
+</tr>
+<tr>
+<td><code>completou</code></td>
+<td>BOOLEAN</td>
+<td>Se o usuário ouviu a música até o fim</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>TIMESTAMP</td>
+<td>Timestamp de inserção (watermark)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dispositivos">dispositivos<a class="headerlink" href="#dispositivos" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>SERIAL PK</td>
+<td>Identificador do dispositivo</td>
+</tr>
+<tr>
+<td><code>usuario_id</code></td>
+<td>INT FK</td>
+<td>Referência a <code>usuarios.id</code></td>
+</tr>
+<tr>
+<td><code>tipo</code></td>
+<td>VARCHAR(20)</td>
+<td><code>mobile</code>, <code>web</code> ou <code>desktop</code></td>
+</tr>
+<tr>
+<td><code>so</code></td>
+<td>VARCHAR(50)</td>
+<td>Sistema operacional</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>TIMESTAMP</td>
+<td>Timestamp de inserção</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="tabelas-gold-postgresql-schema-gold-delta-lake">Tabelas Gold (PostgreSQL — schema gold / Delta Lake)<a class="headerlink" href="#tabelas-gold-postgresql-schema-gold-delta-lake" title="Permanent link">&para;</a></h2>
+<h3 id="fato_reproducao">fato_reproducao<a class="headerlink" href="#fato_reproducao" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data_id</code></td>
+<td>INT</td>
+<td>FK → <code>dim_tempo.data_id</code> (formato yyyyMMdd)</td>
+</tr>
+<tr>
+<td><code>usuario_id</code></td>
+<td>INT</td>
+<td>FK → <code>dim_usuario.usuario_id</code></td>
+</tr>
+<tr>
+<td><code>musica_id</code></td>
+<td>INT</td>
+<td>FK → <code>dim_musica.musica_id</code></td>
+</tr>
+<tr>
+<td><code>artista_id</code></td>
+<td>INT</td>
+<td>FK → <code>dim_artista.artista_id</code></td>
+</tr>
+<tr>
+<td><code>ms_tocados</code></td>
+<td>INT</td>
+<td>Milissegundos ouvidos</td>
+</tr>
+<tr>
+<td><code>completou</code></td>
+<td>BOOLEAN</td>
+<td><code>ms_tocados &gt;= 90%</code> da <code>duracao_ms</code></td>
+</tr>
+<tr>
+<td><code>contagem</code></td>
+<td>INT</td>
+<td>Sempre 1 — facilita <code>SUM</code> sem <code>COUNT</code></td>
+</tr>
+<tr>
+<td><code>ano_mes</code></td>
+<td>STRING</td>
+<td>Partição — ex: <code>2026-06</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="fato_pagamento">fato_pagamento<a class="headerlink" href="#fato_pagamento" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data_id</code></td>
+<td>INT</td>
+<td>FK → <code>dim_tempo.data_id</code></td>
+</tr>
+<tr>
+<td><code>usuario_id</code></td>
+<td>INT</td>
+<td>FK → <code>dim_usuario.usuario_id</code></td>
+</tr>
+<tr>
+<td><code>plano_id</code></td>
+<td>INT</td>
+<td>FK → <code>dim_plano.plano_id</code></td>
+</tr>
+<tr>
+<td><code>valor</code></td>
+<td>DECIMAL(8,2)</td>
+<td>Valor cobrado em R$</td>
+</tr>
+<tr>
+<td><code>pago</code></td>
+<td>BOOLEAN</td>
+<td><code>true</code> = pago / <code>false</code> = falhou</td>
+</tr>
+<tr>
+<td><code>ano_mes</code></td>
+<td>STRING</td>
+<td>Partição — ex: <code>2026-06</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="dim_tempo">dim_tempo<a class="headerlink" href="#dim_tempo" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data_id</code></td>
+<td>INT PK</td>
+<td>Formato yyyyMMdd — ex: <code>20260615</code></td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>DATE</td>
+<td>Data completa</td>
+</tr>
+<tr>
+<td><code>ano</code></td>
+<td>INT</td>
+<td>Ano</td>
+</tr>
+<tr>
+<td><code>mes</code></td>
+<td>INT</td>
+<td>Mês (1–12)</td>
+</tr>
+<tr>
+<td><code>dia</code></td>
+<td>INT</td>
+<td>Dia do mês</td>
+</tr>
+<tr>
+<td><code>dia_semana</code></td>
+<td>STRING</td>
+<td>Ex: <code>Segunda-feira</code></td>
+</tr>
+<tr>
+<td><code>ano_mes</code></td>
+<td>STRING</td>
+<td>Ex: <code>2026-06</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="dim_usuario">dim_usuario<a class="headerlink" href="#dim_usuario" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>usuario_id</code></td>
+<td>INT PK</td>
+<td>Chave natural de <code>usuarios.id</code></td>
+</tr>
+<tr>
+<td><code>nome</code></td>
+<td>STRING</td>
+<td>Nome do usuário</td>
+</tr>
+<tr>
+<td><code>pais</code></td>
+<td>STRING</td>
+<td>País</td>
+</tr>
+<tr>
+<td><code>data_cadastro</code></td>
+<td>DATE</td>
+<td>Data de criação da conta</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dim_plano">dim_plano<a class="headerlink" href="#dim_plano" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plano_id</code></td>
+<td>INT PK</td>
+<td>Chave natural de <code>planos.id</code></td>
+</tr>
+<tr>
+<td><code>nome</code></td>
+<td>STRING</td>
+<td>Grátis, Premium ou Família</td>
+</tr>
+<tr>
+<td><code>preco_mensal</code></td>
+<td>DECIMAL(8,2)</td>
+<td>Valor mensal em R$</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dim_artista">dim_artista<a class="headerlink" href="#dim_artista" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>artista_id</code></td>
+<td>INT PK</td>
+<td>Chave natural de <code>artistas.id</code></td>
+</tr>
+<tr>
+<td><code>nome</code></td>
+<td>STRING</td>
+<td>Nome artístico</td>
+</tr>
+<tr>
+<td><code>pais</code></td>
+<td>STRING</td>
+<td>País de origem</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dim_musica">dim_musica<a class="headerlink" href="#dim_musica" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>musica_id</code></td>
+<td>INT PK</td>
+<td>Chave natural de <code>musicas.id</code></td>
+</tr>
+<tr>
+<td><code>titulo</code></td>
+<td>STRING</td>
+<td>Título da música</td>
+</tr>
+<tr>
+<td><code>genero</code></td>
+<td>STRING</td>
+<td>Gênero musical (desnormalizado)</td>
+</tr>
+<tr>
+<td><code>album</code></td>
+<td>STRING</td>
+<td>Título do álbum (desnormalizado)</td>
+</tr>
+<tr>
+<td><code>artista_id</code></td>
+<td>INT</td>
+<td>FK → <code>dim_artista</code></td>
+</tr>
+<tr>
+<td><code>duracao_ms</code></td>
+<td>INT</td>
+<td>Duração em milissegundos</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="regras-de-negocio">Regras de Negócio<a class="headerlink" href="#regras-de-negocio" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Termo</th>
+<th>Definição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Play válido</strong></td>
+<td><code>ms_tocados &gt;= 30.000 ms</code> (30 segundos)</td>
+</tr>
+<tr>
+<td><strong>completou</strong></td>
+<td><code>ms_tocados &gt;= 90% * duracao_ms</code> da música</td>
+</tr>
+<tr>
+<td><strong>Watermark</strong></td>
+<td>Maior <code>created_at</code> já processado — base da carga incremental</td>
+</tr>
+<tr>
+<td><strong>ingestao_date</strong></td>
+<td>Data em que o dado entrou na Bronze</td>
+</tr>
+<tr>
+<td><strong>ano_mes</strong></td>
+<td>String no formato <code>yyyy-MM</code> — partição de Silver e Gold</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.top", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>

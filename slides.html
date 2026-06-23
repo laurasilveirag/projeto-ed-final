@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Pipeline de Dados — Streaming de Música</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
+<style>
+  :root {
+    --accent: #00c896;
+    --blue:   #4a9eff;
+    --muted:  #8899aa;
+    --card:   #111b27;
+    --border: #1e3a50;
+  }
+  .reveal { font-family: 'Segoe UI', Arial, sans-serif; }
+  .reveal h1 { text-transform: none; font-size: 1.6em; color: #fff; font-weight: 700; letter-spacing: -0.5px; }
+  .reveal h2 { text-transform: none; font-size: 1.1em; color: var(--accent); font-weight: 600; margin-bottom: 18px; }
+  .reveal p, .reveal li { font-size: 0.65em; color: #cdd; line-height: 1.6; }
+  .reveal a { color: var(--blue); }
+  .tag { display: inline-block; background: #0d1f30; border: 1px solid var(--border);
+         color: var(--accent); padding: 3px 10px; border-radius: 4px; font-size: 0.42em;
+         font-weight: 600; letter-spacing: 0.5px; margin: 2px; }
+  .tag.blue { color: var(--blue); border-color: #1e3a6e; }
+  .tag.muted { color: var(--muted); border-color: #1e2a3a; }
+  /* FLOW */
+  .flow { display: flex; align-items: center; gap: 0; margin: 20px auto; justify-content: center; flex-wrap: nowrap; }
+  .flow-box { padding: 10px 14px; font-size: 0.5em; font-weight: 700; text-align: center;
+              border-radius: 6px; min-width: 90px; line-height: 1.3; }
+  .f-landing { background: #0a2540; border: 1px solid #1a4a80; color: #7eb8f7; }
+  .f-bronze  { background: #1f1100; border: 1px solid #7a4000; color: #e8944a; }
+  .f-silver  { background: #131a22; border: 1px solid #446; color: #b0b8c8; }
+  .f-gold    { background: #1a1400; border: 1px solid #776000; color: #e8ca4a; }
+  .f-bi      { background: #0d1f1a; border: 1px solid #006040; color: var(--accent); }
+  .f-arrow   { font-size: 1.1em; color: #334; margin: 0 2px; }
+  /* GRID */
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+  .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 12px; }
+  .g4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
+  /* CARD */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .card h3 { color: var(--accent); font-size: 0.7em; margin: 0 0 8px; text-transform: none; }
+  .card p  { font-size: 0.55em; color: var(--muted); margin: 0; line-height: 1.5; }
+  .card.blue { border-color: #1e3a6e; }
+  .card.blue h3 { color: var(--blue); }
+  /* STAT */
+  .stats { display: flex; justify-content: space-around; margin: 24px 0; }
+  .stat { text-align: center; }
+  .stat .n { font-size: 2.2em; font-weight: 700; color: var(--accent); line-height: 1; }
+  .stat .l { font-size: 0.44em; color: var(--muted); margin-top: 4px; }
+  /* CODE */
+  .code { font-family: 'Courier New', monospace; font-size: 0.48em; background: #080e14;
+          border: 1px solid #1e3040; border-radius: 6px; padding: 14px; text-align: left;
+          color: #7eb8f7; line-height: 1.7; }
+  .code .g { color: var(--accent); }
+  .code .y { color: #e8ca4a; }
+  .code .m { color: var(--muted); }
+  /* TABLE */
+  table { font-size: 0.52em; width: 100%; border-collapse: collapse; }
+  th { background: #0a2540; color: var(--blue); padding: 7px 12px; text-align: left; font-weight: 600; }
+  td { padding: 6px 12px; border-bottom: 1px solid #1a2a3a; color: #bcc; }
+  tr:hover td { background: #0d1820; }
+  /* DIVIDER */
+  .divider { width: 50px; height: 2px; background: var(--accent); margin: 12px auto; border-radius: 2px; }
+  /* SUBTITLE */
+  .subtitle { font-size: 0.6em; color: var(--muted); margin-top: -6px; margin-bottom: 16px; }
+  /* LAYER ROW */
+  .layer-row { display: flex; align-items: flex-start; gap: 14px; margin: 10px 0; }
+  .layer-label { font-size: 0.52em; font-weight: 700; min-width: 80px; padding: 6px 10px;
+                 border-radius: 5px; text-align: center; }
+  .layer-desc { font-size: 0.52em; color: #aab; line-height: 1.6; flex: 1; padding-top: 4px; }
+  .layer-desc strong { color: #dde; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- 1. TÍTULO -->
+<section data-background-color="#060d16">
+  <div style="padding: 20px 0;">
+    <div style="font-size:0.5em; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-bottom:16px;">
+      Engenharia de Dados · SATC 2026/1
+    </div>
+    <h1 style="font-size:2em; line-height:1.2;">Pipeline de Dados<br><span style="color:var(--accent)">Streaming de Música</span></h1>
+    <div class="divider"></div>
+    <p style="color:var(--muted); font-size:0.6em; margin-top:16px; line-height:1.8;">
+      Arquitetura Medalhão · PostgreSQL · MinIO · Apache Spark<br>
+      Delta Lake · Apache Airflow · Metabase · Docker · MkDocs
+    </p>
+    <div style="margin-top:24px;">
+      <span class="tag">Landing</span>
+      <span class="tag">Bronze</span>
+      <span class="tag">Silver</span>
+      <span class="tag" style="color:#e8ca4a; border-color:#554010;">Gold</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2. O PROBLEMA -->
+<section data-background-color="#060d16">
+  <h2>O Ponto de Partida</h2>
+  <h1>De onde vêm os dados?</h1>
+  <div class="g2" style="margin-top:20px;">
+    <div class="card">
+      <h3>Ambiente de Origem</h3>
+      <p>Banco de dados relacional <strong>PostgreSQL 16</strong> simulando um serviço de streaming de música. 12 tabelas interligadas, dados distribuídos nos <strong>últimos 3 anos</strong>, gerados com a biblioteca <strong>Faker</strong>.</p>
+    </div>
+    <div class="card blue">
+      <h3>Volume de Dados</h3>
+      <p>
+        <strong style="color:#dde;">70.000</strong> reproduções<br>
+        <strong style="color:#dde;">10.500</strong> pagamentos<br>
+        <strong style="color:#dde;">10.000</strong> músicas<br>
+        <strong style="color:#dde;">3.000</strong> usuários<br>
+        <strong style="color:#dde;">500</strong> artistas<br>
+      </p>
+    </div>
+  </div>
+  <p style="margin-top:16px; color:var(--muted); font-size:0.55em;">
+    O desafio: transformar esse banco relacional transacional em um modelo analítico pronto para geração de KPIs e dashboards.
+  </p>
+</section>
+
+<!-- 3. INFRAESTRUTURA -->
+<section data-background-color="#060d16">
+  <h2>Antes de Qualquer Dado</h2>
+  <h1>A Infraestrutura</h1>
+  <p class="subtitle">Todo o ambiente sobe com um único comando: <code style="color:var(--accent)">docker compose up -d</code></p>
+  <div class="g3" style="margin-top:16px;">
+    <div class="card">
+      <h3>PostgreSQL 16</h3>
+      <p>Banco de origem + schema <strong>gold</strong> para servir o Metabase</p>
+    </div>
+    <div class="card">
+      <h3>MinIO</h3>
+      <p>Object Storage S3-compatible. Data Lake com buckets <strong>landing</strong>, <strong>bronze</strong> e <strong>silver</strong></p>
+    </div>
+    <div class="card">
+      <h3>Apache Airflow 2.9</h3>
+      <p>Orquestrador do pipeline. Imagem customizada com <strong>PySpark + Java 17</strong> embutidos</p>
+    </div>
+    <div class="card blue">
+      <h3>Metabase</h3>
+      <p>Ferramenta de BI conectada ao schema <strong>gold</strong> do Postgres</p>
+    </div>
+    <div class="card blue">
+      <h3>Seed</h3>
+      <p>Container dedicado que popula o Postgres com <strong>Faker</strong> na inicialização</p>
+    </div>
+    <div class="card blue">
+      <h3>Python 3.12 + uv</h3>
+      <p>Gerenciamento de dependências, notebooks e testes automatizados</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4. LANDING -->
+<section data-background-color="#060d16">
+  <h2>Camada 1 — Ingesta</h2>
+  <h1>Landing Zone</h1>
+  <div class="flow" style="margin: 16px auto;">
+    <div class="flow-box f-landing">PostgreSQL<br>12 tabelas</div>
+    <div class="f-arrow">──JDBC──▶</div>
+    <div class="flow-box f-landing">Landing<br>CSV</div>
+  </div>
+  <div class="g2" style="margin-top:16px;">
+    <div class="card">
+      <h3>O que acontece aqui</h3>
+      <p>O PySpark lê as tabelas do Postgres via <strong>JDBC</strong> e salva cada uma como arquivo <strong>CSV com header</strong> no bucket <code>landing</code> do MinIO. Dados brutos, sem nenhuma transformação.</p>
+    </div>
+    <div class="card blue">
+      <h3>Por que CSV?</h3>
+      <p>O professor especificou formato bruto original — <strong>CSV para dados SQL</strong>. A Landing é a zona de quarentena: o dado chega exatamente como saiu da origem.</p>
+    </div>
+  </div>
+  <div style="margin-top:14px; text-align:center;">
+    <span class="tag blue">8 dimensões</span>
+    <span class="tag blue">3 tabelas fato</span>
+    <span class="tag muted">MinIO bucket: landing/</span>
+  </div>
+</section>
+
+<!-- 5. BRONZE -->
+<section data-background-color="#060d16">
+  <h2>Camada 2 — Promoção</h2>
+  <h1>Bronze — A Cópia Fiel</h1>
+  <div class="flow" style="margin: 14px auto;">
+    <div class="flow-box f-landing">Landing<br>CSV</div>
+    <div class="f-arrow">──Delta──▶</div>
+    <div class="flow-box f-bronze">Bronze<br>Delta Lake</div>
+  </div>
+  <div class="layer-row" style="margin-top:16px;">
+    <div class="layer-label f-bronze">Schema</div>
+    <div class="layer-desc">Os CSVs são lidos com <strong>schemas explícitos</strong> definidos a partir do DDL de origem. Cada coluna recebe o tipo correto — inteiros, timestamps, decimais, booleans.</div>
+  </div>
+  <div class="layer-row">
+    <div class="layer-label f-bronze">Delta</div>
+    <div class="layer-desc">O dado é persistido em <strong>formato Delta Lake</strong> — Parquet com transaction log. Isso garante operações ACID, time travel e schema enforcement.</div>
+  </div>
+  <div class="layer-row">
+    <div class="layer-label f-bronze">Partição</div>
+    <div class="layer-desc">Particionado por <code><strong>ingestao_date</strong></code> — a data em que o dado entrou no lake. Rastreabilidade total de quando cada lote foi ingerido.</div>
+  </div>
+</section>
+
+<!-- 6. SILVER -->
+<section data-background-color="#060d16">
+  <h2>Camada 3 — Transformação</h2>
+  <h1>Silver — Dado Limpo e Confiável</h1>
+  <div class="flow" style="margin: 14px auto;">
+    <div class="flow-box f-bronze">Bronze</div>
+    <div class="f-arrow">──Spark──▶</div>
+    <div class="flow-box f-silver">Silver<br>Delta Lake</div>
+  </div>
+  <div class="g2" style="margin-top:14px;">
+    <div class="card">
+      <h3>Limpeza Geral</h3>
+      <p>
+        · Deduplicação por <code>id</code> em todas as tabelas<br>
+        · Trim de espaços em colunas de texto<br>
+        · Padronização de status com <code>lower()</code><br>
+        · Dimensões sem partição (volume pequeno)
+      </p>
+    </div>
+    <div class="card">
+      <h3>Regras de Negócio — Fatos</h3>
+      <p>
+        · Plays com <code>ms_tocados &lt; 30.000 ms</code> são <strong>descartados</strong><br>
+        · <code>completou</code> é <strong>recalculado</strong>: ms_tocados ≥ 90% da duração<br>
+        · Fatos particionados por <code>ano_mes</code> do evento<br>
+        · 7 testes pytest validam as regras
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 7. GOLD -->
+<section data-background-color="#060d16">
+  <h2>Camada 4 — Modelagem</h2>
+  <h1>Gold — Star Schema Dimensional</h1>
+  <div class="flow" style="margin: 12px auto;">
+    <div class="flow-box f-silver">Silver</div>
+    <div class="f-arrow">──Spark──▶</div>
+    <div class="flow-box f-gold">Gold<br>Delta Lake</div>
+    <div class="f-arrow">──JDBC──▶</div>
+    <div class="flow-box" style="background:#0d1f1a; border:1px solid #006040; color:var(--accent);">Postgres<br>schema gold</div>
+  </div>
+  <div class="code" style="margin-top:14px;">
+    <span class="m">── Fatos ──────────────────────────────────────</span><br>
+    <span class="g">fato_reproducao</span>  <span class="m">→ grão: 1 play válido (≥30s)</span><br>
+    <span class="g">fato_pagamento</span>   <span class="m">→ grão: 1 transação financeira</span><br><br>
+    <span class="m">── Dimensões ──────────────────────────────────</span><br>
+    <span class="y">dim_tempo</span> · <span class="y">dim_usuario</span> · <span class="y">dim_plano</span> · <span class="y">dim_artista</span> · <span class="y">dim_musica</span>
+  </div>
+  <p style="margin-top:12px; font-size:0.52em; color:var(--muted);">
+    O Metabase não lê Delta diretamente — a Gold é <strong>espelhada</strong> no Postgres (<code>schema gold</code>) via JDBC ao final de cada run do Airflow.
+  </p>
+</section>
+
+<!-- 8. AIRFLOW -->
+<section data-background-color="#060d16">
+  <h2>Orquestração</h2>
+  <h1>Apache Airflow — DAG Completa</h1>
+  <div class="code" style="margin-top:16px;">
+<span class="g">criar_buckets</span><br>
+&nbsp; ├── <span class="y">landing_dimensoes</span> → <span class="y">bronze_dimensoes</span> → <span class="y">silver_dimensoes</span> → <span class="y">gold_dimensoes</span> ──┐<br>
+&nbsp; └── <span class="y">landing_fatos</span>     → <span class="y">bronze_fatos</span>     → <span class="y">silver_fatos</span>     → <span class="y">gold_fatos</span>      ──┤<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="g">gold_postgres</span>
+  </div>
+  <div class="g3" style="margin-top:16px;">
+    <div class="card">
+      <h3>Agendamento</h3>
+      <p>Execução <strong>diária</strong> (<code>@hour</code>). A DAG roda automaticamente e processa apenas os dados novos.</p>
+    </div>
+    <div class="card blue">
+      <h3>Carga Incremental</h3>
+      <p>Watermark por <code>created_at</code> — cada run lê só os registros inseridos após o último processamento.</p>
+    </div>
+    <div class="card">
+      <h3>10 a 20 min</h3>
+      <p>Tempo de execução completo do pipeline, rodando <strong>PySpark in-process</strong> no container do Airflow.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9. DASHBOARD -->
+<section data-background-color="#060d16">
+  <h2>Visualização</h2>
+  <h1>Dashboard — One Page View</h1>
+  <p class="subtitle">4 KPIs + 2 métricas. Tudo visível em uma única tela, sem scroll.</p>
+  <table style="margin-top:12px;">
+    <tr><th>Indicador</th><th>Fonte</th><th>Regra</th></tr>
+    <tr><td><strong>KPI 1</strong> — Receita mensal por plano</td><td>fato_pagamento + dim_plano</td><td>SUM(valor) WHERE pago = true</td></tr>
+    <tr><td><strong>KPI 2</strong> — Taxa de churn mensal</td><td>fato_pagamento</td><td>Usuários que saíram entre M-1 e M</td></tr>
+    <tr><td><strong>KPI 3</strong> — Usuários Ativos (MAU)</td><td>fato_reproducao</td><td>DISTINCT usuario_id por mês</td></tr>
+    <tr><td><strong>KPI 4</strong> — Top 10 artistas</td><td>fato_reproducao + dim_artista</td><td>COUNT(*) por artista</td></tr>
+    <tr><td><strong>Métrica</strong> — Horas ouvidas</td><td>fato_reproducao</td><td>SUM(ms_tocados) / 3.600.000</td></tr>
+    <tr><td><strong>Métrica</strong> — Ticket médio</td><td>fato_pagamento</td><td>Receita / assinantes pagantes</td></tr>
+  </table>
+</section>
+
+<!-- 10. QUALIDADE E DOCS -->
+<section data-background-color="#060d16">
+  <h2>Qualidade e Documentação</h2>
+  <h1>GitHub + Testes + MkDocs</h1>
+  <div class="g2" style="margin-top:16px;">
+    <div>
+      <div class="card" style="margin-bottom:10px;">
+        <h3>Testes Automatizados</h3>
+        <p>
+          <strong>18+ testes pytest</strong> cobrindo:<br>
+          · Geração de dados (Faker) — volume e unicidade<br>
+          · Transformações Silver — filtro de plays, derivação de <code>completou</code>, dedup<br>
+          · Validações Gold — schema e contagem
+        </p>
+      </div>
+      <div class="card blue">
+        <h3>Versionamento</h3>
+        <p>
+          Todo o código versionado via <strong>Pull Requests</strong>.<br>
+          Branch <code>main</code> protegida — sem push direto.<br>
+          Issues mapeando cada tarefa do projeto.
+        </p>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:10px;">
+        <h3>MkDocs Material</h3>
+        <p>
+          Site de documentação publicado no <strong>GitHub Pages</strong>:<br>
+          · Arquitetura com diagrama Mermaid<br>
+          · DICTIONARY.md — 12 tabelas documentadas<br>
+          · 4 ADRs de decisões de arquitetura<br>
+          · Como rodar, KPIs e referências
+        </p>
+      </div>
+      <div class="card blue">
+        <h3>Deploy Automático</h3>
+        <p>
+          GitHub Actions publica o MkDocs automaticamente a cada push na <code>main</code> que altere a documentação.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11. RESULTADOS -->
+<section data-background-color="#060d16">
+  <h2>Resultado Final</h2>
+  <h1>Números do Projeto</h1>
+  <div class="stats" style="margin-top:24px;">
+    <div class="stat"><div class="n">12</div><div class="l">Tabelas de origem</div></div>
+    <div class="stat"><div class="n">70k+</div><div class="l">Plays processados</div></div>
+    <div class="stat"><div class="n">9</div><div class="l">Notebooks PySpark</div></div>
+    <div class="stat"><div class="n">4</div><div class="l">Camadas Medalhão</div></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="n">7</div><div class="l">Tabelas Gold</div></div>
+    <div class="stat"><div class="n">18+</div><div class="l">Testes pytest</div></div>
+    <div class="stat"><div class="n">4</div><div class="l">ADRs documentados</div></div>
+    <div class="stat"><div class="n">10</div><div class="l">Tasks no Airflow</div></div>
+  </div>
+  <div style="margin-top:20px; display:flex; justify-content:center; gap:16px; font-size:0.5em; color:var(--muted);">
+    <span>github.com/laurasilveirag/projeto-ed-final</span>
+    <span style="color:var(--border);">|</span>
+    <span>laurasilveirag.github.io/projeto-ed-final</span>
+  </div>
+</section>
+
+<!-- 12. ENCERRAMENTO -->
+<section data-background-color="#060d16">
+  <div style="padding:30px 0;">
+    <div style="font-size:0.45em; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-bottom:20px;">
+      Engenharia de Dados · SATC 2026/1
+    </div>
+    <h1 style="font-size:1.8em; color:#fff;">Obrigado</h1>
+    <div class="divider"></div>
+    <p style="color:var(--muted); font-size:0.58em; margin-top:20px; line-height:2;">
+      PostgreSQL · MinIO · PySpark · Delta Lake<br>
+      Apache Airflow · Metabase · Docker · MkDocs · GitHub
+    </p>
+    <div style="margin-top:28px; font-size:0.48em;">
+      <div style="margin-bottom:8px;">
+        <span style="color:var(--muted);">Repositório:</span>
+        <a href="https://github.com/laurasilveirag/projeto-ed-final">github.com/laurasilveirag/projeto-ed-final</a>
+      </div>
+      <div>
+        <span style="color:var(--muted);">Documentação:</span>
+        <a href="https://laurasilveirag.github.io/projeto-ed-final/">laurasilveirag.github.io/projeto-ed-final</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script>
+Reveal.initialize({
+  hash: true, transition: 'fade', transitionSpeed: 'fast',
+  controls: true, progress: true, slideNumber: 'c/t', center: true,
+  width: 1100, height: 700, margin: 0.06,
+});
+</script>
+</body>
+</html>
