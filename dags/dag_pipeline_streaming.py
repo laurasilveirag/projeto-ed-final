@@ -606,7 +606,7 @@ with DAG(
     dag_id="pipeline_streaming",
     description="Pipeline medalhão completo com carga incremental por watermark",
     start_date=datetime(2024, 1, 1),
-    schedule_interval="@daily",
+    schedule_interval="@hourly",
     catchup=False,
     default_args=default_args,
     tags=["streaming", "pipeline", "medallion"],
