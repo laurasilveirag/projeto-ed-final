@@ -422,9 +422,9 @@ def gold_dimensoes():
 
     try:
         # dim_tempo — calendário gerado a partir do range das datas dos fatos
-        local_repro = Path("/tmp/dag_silver/reproducoes")
+        local_repro = Path("/tmp/dag_gold_dim/silver/reproducoes")
         _download_delta("silver", "fatos/reproducoes", local_repro, cliente)
-        local_pag = Path("/tmp/dag_silver/pagamentos")
+        local_pag = Path("/tmp/dag_gold_dim/silver/pagamentos")
         _download_delta("silver", "fatos/pagamentos", local_pag, cliente)
 
         df_datas = (spark.read.format("delta").load(str(local_repro))
@@ -442,7 +442,7 @@ def gold_dimensoes():
                     .withColumn("ano_mes",    F.date_format("data", "yyyy-MM"))
                     .select("data_id", "data", "ano", "mes", "dia", "dia_semana", "ano_mes")
                     .orderBy("data"))
-        local_gold = Path("/tmp/dag_gold/dim_tempo")
+        local_gold = Path("/tmp/dag_gold_dim/gold/dim_tempo")
         if local_gold.exists():
             shutil.rmtree(local_gold)
         df_tempo.write.format("delta").mode("overwrite").save(str(local_gold))
@@ -450,11 +450,11 @@ def gold_dimensoes():
         print(f"gold/dimensoes/dim_tempo: {df_tempo.count():,} dias")
 
         # dim_usuario
-        local_s = Path("/tmp/dag_silver/usuarios")
+        local_s = Path("/tmp/dag_gold_dim/silver/usuarios")
         _download_delta("silver", "dimensoes/usuarios", local_s, cliente)
         df = (spark.read.format("delta").load(str(local_s))
               .select(F.col("id").alias("usuario_id"), "nome", "pais", "data_cadastro"))
-        local_gold = Path("/tmp/dag_gold/dim_usuario")
+        local_gold = Path("/tmp/dag_gold_dim/gold/dim_usuario")
         if local_gold.exists():
             shutil.rmtree(local_gold)
         df.write.format("delta").mode("overwrite").save(str(local_gold))
@@ -462,11 +462,11 @@ def gold_dimensoes():
         print(f"gold/dimensoes/dim_usuario: {df.count():,} registros")
 
         # dim_plano
-        local_s = Path("/tmp/dag_silver/planos")
+        local_s = Path("/tmp/dag_gold_dim/silver/planos")
         _download_delta("silver", "dimensoes/planos", local_s, cliente)
         df = (spark.read.format("delta").load(str(local_s))
               .select(F.col("id").alias("plano_id"), "nome", "preco_mensal"))
-        local_gold = Path("/tmp/dag_gold/dim_plano")
+        local_gold = Path("/tmp/dag_gold_dim/gold/dim_plano")
         if local_gold.exists():
             shutil.rmtree(local_gold)
         df.write.format("delta").mode("overwrite").save(str(local_gold))
@@ -474,11 +474,11 @@ def gold_dimensoes():
         print(f"gold/dimensoes/dim_plano: {df.count():,} registros")
 
         # dim_artista
-        local_s = Path("/tmp/dag_silver/artistas")
+        local_s = Path("/tmp/dag_gold_dim/silver/artistas")
         _download_delta("silver", "dimensoes/artistas", local_s, cliente)
         df = (spark.read.format("delta").load(str(local_s))
               .select(F.col("id").alias("artista_id"), "nome", "pais"))
-        local_gold = Path("/tmp/dag_gold/dim_artista")
+        local_gold = Path("/tmp/dag_gold_dim/gold/dim_artista")
         if local_gold.exists():
             shutil.rmtree(local_gold)
         df.write.format("delta").mode("overwrite").save(str(local_gold))
@@ -486,11 +486,11 @@ def gold_dimensoes():
         print(f"gold/dimensoes/dim_artista: {df.count():,} registros")
 
         # dim_musica (join com albuns e generos)
-        local_mus = Path("/tmp/dag_silver/musicas")
+        local_mus = Path("/tmp/dag_gold_dim/silver/musicas")
         _download_delta("silver", "dimensoes/musicas", local_mus, cliente)
-        local_alb = Path("/tmp/dag_silver/albuns")
+        local_alb = Path("/tmp/dag_gold_dim/silver/albuns")
         _download_delta("silver", "dimensoes/albuns", local_alb, cliente)
-        local_gen = Path("/tmp/dag_silver/generos")
+        local_gen = Path("/tmp/dag_gold_dim/silver/generos")
         _download_delta("silver", "dimensoes/generos", local_gen, cliente)
 
         df_alb = (spark.read.format("delta").load(str(local_alb))
@@ -501,7 +501,7 @@ def gold_dimensoes():
               .join(df_alb, on="album_id", how="left")
               .join(df_gen, on="genero_id", how="left")
               .select(F.col("id").alias("musica_id"), "titulo", "genero", "album", "artista_id", "duracao_ms"))
-        local_gold = Path("/tmp/dag_gold/dim_musica")
+        local_gold = Path("/tmp/dag_gold_dim/gold/dim_musica")
         if local_gold.exists():
             shutil.rmtree(local_gold)
         df.write.format("delta").mode("overwrite").save(str(local_gold))
@@ -519,9 +519,9 @@ def gold_fatos():
 
     try:
         # fato_reproducao
-        local_repro = Path("/tmp/dag_silver/reproducoes")
+        local_repro = Path("/tmp/dag_gold_fat/silver/reproducoes")
         _download_delta("silver", "fatos/reproducoes", local_repro, cliente)
-        local_mus = Path("/tmp/dag_silver/musicas")
+        local_mus = Path("/tmp/dag_gold_fat/silver/musicas")
         _download_delta("silver", "dimensoes/musicas", local_mus, cliente)
         df_mus_art = (spark.read.format("delta").load(str(local_mus))
                       .select(F.col("id").alias("musica_id"), "artista_id"))
@@ -531,7 +531,7 @@ def gold_fatos():
               .withColumn("contagem",  F.lit(1))
               .select("data_id", "usuario_id", "musica_id", "artista_id",
                       "ms_tocados", "completou", "contagem", "ano_mes"))
-        local_gold = Path("/tmp/dag_gold/fato_reproducao")
+        local_gold = Path("/tmp/dag_gold_fat/gold/fato_reproducao")
         if local_gold.exists():
             shutil.rmtree(local_gold)
         df.write.format("delta").mode("overwrite").partitionBy("ano_mes").save(str(local_gold))
@@ -539,9 +539,9 @@ def gold_fatos():
         print(f"gold/fatos/fato_reproducao: {df.count():,} registros")
 
         # fato_pagamento
-        local_pag = Path("/tmp/dag_silver/pagamentos")
+        local_pag = Path("/tmp/dag_gold_fat/silver/pagamentos")
         _download_delta("silver", "fatos/pagamentos", local_pag, cliente)
-        local_assin = Path("/tmp/dag_silver/assinaturas")
+        local_assin = Path("/tmp/dag_gold_fat/silver/assinaturas")
         _download_delta("silver", "fatos/assinaturas", local_assin, cliente)
         df_assin = (spark.read.format("delta").load(str(local_assin))
                     .select(F.col("id").alias("assinatura_id"), "usuario_id", "plano_id"))
@@ -550,7 +550,7 @@ def gold_fatos():
               .withColumn("data_id", F.date_format(F.col("data").cast("timestamp"), "yyyyMMdd").cast("int"))
               .withColumn("pago",    F.col("status") == F.lit("pago"))
               .select("data_id", "usuario_id", "plano_id", "valor", "pago", "ano_mes"))
-        local_gold = Path("/tmp/dag_gold/fato_pagamento")
+        local_gold = Path("/tmp/dag_gold_fat/gold/fato_pagamento")
         if local_gold.exists():
             shutil.rmtree(local_gold)
         df.write.format("delta").mode("overwrite").partitionBy("ano_mes").save(str(local_gold))
